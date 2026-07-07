@@ -1,26 +1,20 @@
-import { Box, Typography } from "@mui/material"
-import type { JSX } from "react"
+import type { JSX } from "react";
 import { type Task } from "../../interfaces/task.interface";
+import {
+  CardTaskContainerStyled,
+  CardTaskDescriptionStyled,
+  CardTaskTitleStyled,
+} from "./styles";
 
 interface TaskCardProps {
-    task: Task;
-
+  task: Task;
 }
 
 export const TaskCard = ({ task }: TaskCardProps): JSX.Element => {
-
-    return (
-        <Box>
-            <Typography>
-                {task?.createdAt}
-            </Typography>
-            <Typography>
-                {task?.title}
-            </Typography>
-            <Typography>
-                {task?.description}
-            </Typography>
-        </Box>
-    )
-
-}
+  return (
+    <CardTaskContainerStyled>
+      <CardTaskTitleStyled>{task?.title}</CardTaskTitleStyled>
+      <CardTaskDescriptionStyled>{task?.description}</CardTaskDescriptionStyled>
+    </CardTaskContainerStyled>
+  );
+};
