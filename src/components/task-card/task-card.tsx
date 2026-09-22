@@ -20,7 +20,6 @@ export const TaskCard = ({ task }: TaskCardProps): JSX.Element => {
   const style = {
     transition,
     transform: CSS.Transform.toString(transform),
-
   }
 
   return (
