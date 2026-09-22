@@ -30,7 +30,8 @@ export const CustomModal = ({ open, setOpen, onSubmit }: CustomModalProps): JSX.
         e.preventDefault();
         if (!title.trim()) return;
 
-        const id = uuidv4();
+        const generatedId = uuidv4();
+        const id = `${status}-${generatedId}`
         const createdAt = new Date().toISOString().split("T")[0];
 
         onSubmit({ id, title, description, status, createdAt });
