@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 
 interface ColumnStyledProps {
-    bg: string
+  bg: string
 }
 
 export const MainWrapperStyled = styled.div`
@@ -19,9 +19,8 @@ export const MainWrapperStyled = styled.div`
 export const ColumnsContainerStyled = styled.div`
   display: flex;
   flex: 1;
-
   gap: 30px;
-  width: 100%;
+  width: 100vw;
 
   min-height: 0;
 `;
@@ -29,16 +28,15 @@ export const ColumnsContainerStyled = styled.div`
 
 export const ColumnStyled = styled.div.withConfig({
   shouldForwardProp: (prop) => prop !== "bg",
-})<ColumnStyledProps>`
+}) <ColumnStyledProps>`
   flex: 1;
 
   display: flex;
   flex-direction: column;
 
-  padding: 10px;
+  padding: 10px 25px 10px 25px;
   gap: 10px;
 
-  overflow-y: auto;
   min-height: 0;
 
   justify-content: flex-start;
