@@ -1,5 +1,4 @@
 import { Add } from "@mui/icons-material";
-import { Box, IconButton } from "@mui/material"
 import { ColumnIndicatorWrapperStyled, ColumnTitleStyled, CounterIndicatorStyled, IconButtonStyled, InfoWrapperStyled } from "./styles";
 
 interface ColumnIndicatorProps {
