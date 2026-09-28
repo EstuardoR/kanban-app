@@ -6,10 +6,6 @@ import {
     DialogActions,
     TextField,
     Button,
-    FormControl,
-    InputLabel,
-    Select,
-    MenuItem,
     Box
 } from "@mui/material";
 import { type Status, type Task } from "../../interfaces/task.interface";
@@ -19,12 +15,12 @@ interface CustomModalProps {
     open: boolean;
     setOpen: (open: boolean) => void;
     onSubmit: (task: Task) => void;
+    status: Status;
 }
 
-export const CustomModal = ({ open, setOpen, onSubmit }: CustomModalProps): JSX.Element => {
+export const CustomModal = ({ open, setOpen, onSubmit, status }: CustomModalProps): JSX.Element => {
     const [title, setTitle] = useState<string>("");
     const [description, setDescription] = useState<string>("");
-    const [status, setStatus] = useState<Status>("backlog");
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
@@ -39,7 +35,6 @@ export const CustomModal = ({ open, setOpen, onSubmit }: CustomModalProps): JSX.
 
         setTitle("");
         setDescription("");
-        setStatus("backlog");
         setOpen(false);
     };
 
@@ -78,20 +73,6 @@ export const CustomModal = ({ open, setOpen, onSubmit }: CustomModalProps): JSX.
                         value={description}
                         onChange={(e) => setDescription(e.target.value)}
                     />
-
-                    <FormControl fullWidth>
-                        <InputLabel id="status-label">Estado inicial</InputLabel>
-                        <Select
-                            labelId="status-label"
-                            value={status}
-                            label="Estado inicial"
-                            onChange={(e) => setStatus(e.target.value as Status)}
-                        >
-                            <MenuItem value="backlog">Backlog</MenuItem>
-                            <MenuItem value="in-process">En Proceso</MenuItem>
-                            <MenuItem value="completed">Completado</MenuItem>
-                        </Select>
-                    </FormControl>
                 </Box>
             </DialogContent>
 
