@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { ColumnsContainerStyled, MainWrapperStyled } from "./styles";
+import { BoardHeaderStyled, BoardSectionStyled, ColumnsContainerStyled, MainWrapperStyled, SidebarStyled } from "./styles";
 import { CustomModal } from "../../components/custom-modal/custom-modal";
 import { type Status, type Task } from "../../interfaces/task.interface";
 import { TaskCard } from "../../components/task-card/task-card";
@@ -15,13 +15,16 @@ import {
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
 import { ColumnBoard } from "../../components/column-board/column-board";
+import { COLUMNS } from "../../constants/columns.constant";
 
 export default function Home() {
   const [open, setOpen] = useState<boolean>(false);
   const [tasks, setTasks] = useState<Task[]>([]);
   const [activeTask, setActiveTask] = useState<Task | null>(null);
+  const [selectedStatus, setSelectedStatus] = useState<Status>("backlog");
 
-  const handleOpenModal = (): void => {
+  const handleOpenModal = (status: Status): void => {
+    setSelectedStatus(status);
     setOpen(true);
   };
 
@@ -39,8 +42,6 @@ export default function Home() {
     setActiveTask(null);
   };
 
-  const columnIds: Status[] = ["backlog", "in-process", "completed"];
-
   const handleDragOver = (onDragOverEvent: DragOverEvent) => {
     const { active, over } = onDragOverEvent;
 
@@ -51,7 +52,7 @@ export default function Home() {
     if (!activeTaskItem) return;
 
     const overTaskItem = tasks.find((t) => t.id === over.id);
-    const overColumnId = columnIds.find((id) => id === over.id);
+    const overColumnId = COLUMNS.find((c) => c.id === over.id)?.id;
 
     const newStatus = overTaskItem ? overTaskItem.status : overColumnId;
 
@@ -68,79 +69,58 @@ export default function Home() {
     }
   };
 
-  const backlogTasks = tasks.filter((t) => t.status === "backlog");
-  const processTasks = tasks.filter((t) => t.status === "in-process");
-  const completedTasks = tasks.filter((t) => t.status === "completed");
-
   return (
     <MainWrapperStyled>
-      <h1>Kanban app</h1>
-      <button onClick={handleOpenModal}>AÑADIR TAREA</button>
-      <DndContext
-        onDragStart={handleDragStart}
-        onDragEnd={handleDragEnd}
-        onDragOver={handleDragOver}
-      >
-        <ColumnsContainerStyled>
-          <SortableContext
-            items={completedTasks}
-            strategy={verticalListSortingStrategy}
-          >
-            <ColumnBoard
-              backgroundColor="#c0c9cead"
-              id="completed"
-              columnTitle={"Completado"}
-              bgColumnIndicator="#22C55E"
-              counter={completedTasks.length}
-            >
-              {completedTasks.map((item) => (
-                <TaskCard key={item.id} task={item} />
-              ))}
-            </ColumnBoard>
-          </SortableContext>
+      <SidebarStyled>Sidebar</SidebarStyled>
 
-          <SortableContext
-            items={processTasks}
-            strategy={verticalListSortingStrategy}
-          >
-            <ColumnBoard
-              backgroundColor="#c0c9cead "
-              id="in-process"
-              columnTitle={"En proceso"}
-              bgColumnIndicator="#F59E0B"
-              counter={processTasks.length}
-            >
-              {processTasks.map((item) => (
-                <TaskCard key={item.id} task={item} />
-              ))}
-            </ColumnBoard>
-          </SortableContext>
+      <BoardSectionStyled>
+        <BoardHeaderStyled variant="h4" component="h1">
+          Kanban App
+        </BoardHeaderStyled>
 
-          <SortableContext
-            items={backlogTasks}
-            strategy={verticalListSortingStrategy}
-          >
-            <ColumnBoard
-              backgroundColor="#c0c9cead"
-              id="backlog"
-              columnTitle={"Backlog"}
-              bgColumnIndicator="#4F46E5"
-              counter={backlogTasks.length}
-            >
-              {backlogTasks.map((item) => (
-                <TaskCard key={item.id} task={item} />
-              ))}
-            </ColumnBoard>
-          </SortableContext>
-        </ColumnsContainerStyled>
+        <DndContext
+          onDragStart={handleDragStart}
+          onDragEnd={handleDragEnd}
+          onDragOver={handleDragOver}
+        >
+          <ColumnsContainerStyled>
+            {COLUMNS.map((column) => {
+              const columnTasks = tasks.filter((t) => t.status === column.id);
+              return (
+                <SortableContext
+                  key={column.id}
+                  items={columnTasks}
+                  strategy={verticalListSortingStrategy}
+                >
+                  <ColumnBoard
+                    id={column.id}
+                    columnTitle={column.columnTitle}
+                    bgColumnIndicator={column.bgColumnIndicator}
+                    counter={columnTasks.length}
+                    handleClick={() => handleOpenModal(column.id)}
+                  >
+                    {columnTasks.map((item) => (
+                      <TaskCard key={item.id} task={item} />
+                    ))}
+                  </ColumnBoard>
+                </SortableContext>
+              );
+            })}
+          </ColumnsContainerStyled>
 
-        <DragOverlay>
-          {activeTask ? <TaskCard task={activeTask} /> : null}
-        </DragOverlay>
-      </DndContext>
+          <DragOverlay>
+            {activeTask ? <TaskCard task={activeTask} /> : null}
+          </DragOverlay>
+        </DndContext>
+      </BoardSectionStyled>
 
       {open && (
-        <CustomModal onSubmit={handleAddTask} setOpen={setOpen} open={open} />
+        <CustomModal
+          onSubmit={handleAddTask}
+          setOpen={setOpen}
+          open={open}
+          status={selectedStatus}
+        />
       )}
     </MainWrapperStyled>
   );
