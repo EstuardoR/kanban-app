@@ -7,6 +7,8 @@ import {
 } from "./styles";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
+import { IconButton } from "@mui/material";
+import { MoreVert } from "@mui/icons-material";
 
 interface TaskCardProps {
   task: Task;
@@ -14,13 +16,13 @@ interface TaskCardProps {
 
 export const TaskCard = ({ task }: TaskCardProps): JSX.Element => {
   const { id } = task;
-  const { listeners, attributes, setNodeRef, transform, transition } = useSortable({ id })
-
+  const { listeners, attributes, setNodeRef, transform, transition } =
+    useSortable({ id });
 
   const style = {
     transition,
     transform: CSS.Transform.toString(transform),
-  }
+  };
 
   return (
     <CardTaskContainerStyled
@@ -31,6 +33,17 @@ export const TaskCard = ({ task }: TaskCardProps): JSX.Element => {
     >
       <CardTaskTitleStyled>{task?.title}</CardTaskTitleStyled>
       <CardTaskDescriptionStyled>{task?.description}</CardTaskDescriptionStyled>
+
+      <IconButton
+      onPointerDown={(e) => e.stopPropagation()}
+        sx={{
+          position: "absolute",
+          bottom: 5,
+          right: 2,
+        }}
+      >
+        <MoreVert />
+      </IconButton>
     </CardTaskContainerStyled>
   );
 };
